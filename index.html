@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descargar Soporte Remoto</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Soporte Remoto</h1>
+            <p class="subtitle">Aplicación de Acceso Remoto</p>
+        </header>
+
+        <main>
+            <div class="detection-info">
+                <p>Sistema Operativo Detectado: <strong id="os-detected">Detectando...</strong></p>
+            </div>
+
+            <div class="download-section">
+                <button id="auto-download-btn" class="download-btn primary">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    <span id="download-text">Descargar Ahora</span>
+                </button>
+                <p class="download-info" id="download-info"></p>
+            </div>
+
+            <div class="manual-downloads">
+                <h2>Descargas Manuales</h2>
+                <p class="manual-subtitle">Si la descarga automática no funciona, selecciona tu sistema operativo:</p>
+                
+                <div class="download-options">
+                    <div class="download-card">
+                        <div class="os-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                        </div>
+                        <h3>Windows</h3>
+                        <p>Windows 7, 8, 10, 11</p>
+                        <button class="download-btn secondary" data-os="windows">
+                            Descargar para Windows
+                        </button>
+                    </div>
+
+                    <div class="download-card">
+                        <div class="os-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 16.5c0 2.5 2 4.5 4.5 4.5H12"></path>
+                                <path d="M20 12c0 4.4-3.6 8-8 8s-8-3.6-8-8 3.6-8 8-8 8 3.6 8 8z"></path>
+                            </svg>
+                        </div>
+                        <h3>macOS</h3>
+                        <p>macOS 10.12+</p>
+                        <button class="download-btn secondary" data-os="mac">
+                            Descargar para Mac
+                        </button>
+                    </div>
+
+                    <div class="download-card">
+                        <div class="os-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="2" y1="12" x2="22" y2="12"></line>
+                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                            </svg>
+                        </div>
+                        <h3>Linux</h3>
+                        <p>Ubuntu, Debian, Fedora</p>
+                        <button class="download-btn secondary" data-os="linux">
+                            Descargar para Linux
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Soporte Remoto - Aplicación de Acceso Remoto</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
