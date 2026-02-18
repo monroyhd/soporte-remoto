@@ -28,11 +28,12 @@ npm start
 npm run dev
 ```
 
-El servidor escucha en `http://127.0.0.1:5001` por defecto (solo loopback).
+El servidor escucha en `http://0.0.0.0:5001` por defecto (todas las interfaces),
+lo que permite que Caddy, instalado en otro servidor, alcance el puerto 5001.
 Para cambiar el puerto o la dirección usa variables de entorno:
 
 ```bash
-PORT=5001 HOST=127.0.0.1 npm start
+PORT=5001 HOST=0.0.0.0 npm start
 ```
 
 ## Configuración con Caddy (proxy inverso)
@@ -53,7 +54,7 @@ Edita `/etc/caddy/Caddyfile` (o usa el `Caddyfile` incluido en este repositorio)
 
 ```caddy
 soporte.example.com {
-    reverse_proxy 127.0.0.1:5001 {
+    reverse_proxy 10.10.10.88:5001 {
         header_up X-Real-IP        {remote_host}
         header_up X-Forwarded-For  {remote_host}
         header_up X-Forwarded-Proto {scheme}
@@ -80,10 +81,13 @@ npm start
 ### Flujo de tráfico
 
 ```
-Cliente (HTTPS 443)
-    └─► Caddy  →  termina TLS, añade cabeceras X-Forwarded-*
-            └─► Express 127.0.0.1:5001
+Cliente (HTTPS :443)
+    └─► Caddy (servidor proxy)
+            └─► Express 10.10.10.88:5001  (servidor de la aplicación)
 ```
+
+Caddy termina TLS y añade las cabeceras `X-Forwarded-For` / `X-Forwarded-Proto`.
+Express las acepta gracias a `trust proxy`.
 
 Express recibe las cabeceras `X-Forwarded-For` y `X-Forwarded-Proto` de Caddy gracias a `app.set('trust proxy', 1)`, lo que permite conocer la IP real del cliente y el protocolo original (HTTPS).
 

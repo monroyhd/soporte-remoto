@@ -13,8 +13,8 @@
 #   caddy reload --config Caddyfile
 
 soporte.example.com {
-    # Reenvía todo el tráfico al servidor Express
-    reverse_proxy 127.0.0.1:5001 {
+    # Reenvía todo el tráfico al servidor Express (servidor separado en 10.10.10.88)
+    reverse_proxy 10.10.10.88:5001 {
         # Cabeceras que Express necesita para conocer el cliente real
         header_up X-Real-IP        {remote_host}
         header_up X-Forwarded-For  {remote_host}

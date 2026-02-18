@@ -4,7 +4,8 @@ const UAParser = require('ua-parser-js');
 
 const app = express();
 const PORT = process.env.PORT || 5001;
-const HOST = process.env.HOST || '127.0.0.1';
+// Escuchar en todas las interfaces para ser accesible desde el proxy Caddy (servidor externo)
+const HOST = process.env.HOST || '0.0.0.0';
 
 // Confiar en el proxy inverso (Caddy) para leer X-Forwarded-For y X-Forwarded-Proto
 app.set('trust proxy', 1);
@@ -142,8 +143,8 @@ app.get('/download/:platform', (req, res) => {
   });
 });
 
-// Escuchar solo en loopback: el tráfico público lo gestiona Caddy
+// El tráfico público lo gestiona Caddy (servidor externo → 10.10.10.88:5001)
 app.listen(PORT, HOST, () => {
   console.log(`✅ Servidor soporte-remoto corriendo en http://${HOST}:${PORT}`);
-  console.log(`   (acceso público a través del proxy Caddy)`);
+  console.log(`   (acceso público a través del proxy Caddy → 10.10.10.88:${PORT})`);
 });
