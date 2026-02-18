@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Soporte Remoto – Descarga</title>
+  <title>Soporte Remoto</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -30,10 +30,7 @@
       box-shadow: 0 25px 50px rgba(0,0,0,0.4);
     }
 
-    .logo {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
+    .logo { font-size: 3rem; margin-bottom: 1rem; }
 
     h1 {
       font-size: 1.75rem;
@@ -45,59 +42,70 @@
     .subtitle {
       color: #94a3b8;
       font-size: 0.95rem;
-      margin-bottom: 2.5rem;
-    }
-
-    .platform-detected {
-      background: #0f172a;
-      border: 1px solid #475569;
-      border-radius: 0.5rem;
-      padding: 0.75rem 1rem;
-      font-size: 0.85rem;
-      color: #94a3b8;
       margin-bottom: 2rem;
+      line-height: 1.55;
     }
 
-    .platform-detected span {
-      color: #38bdf8;
-      font-weight: 600;
-    }
-
-    .btn-download {
+    /* Badge de plataforma detectada */
+    .platform-badge {
       display: inline-flex;
       align-items: center;
+      gap: 0.45rem;
+      background: #0f172a;
+      border: 1px solid #475569;
+      border-radius: 2rem;
+      padding: 0.4rem 1rem;
+      font-size: 0.83rem;
+      color: #94a3b8;
+      margin-bottom: 1.75rem;
+    }
+    .platform-badge .os-name { color: #38bdf8; font-weight: 600; }
+
+    /* Botón principal de descarga */
+    .btn-main {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       gap: 0.6rem;
+      width: 100%;
+      padding: 1rem 2rem;
       background: #2563eb;
       color: #fff;
       border: none;
-      border-radius: 0.6rem;
-      padding: 0.9rem 2rem;
+      border-radius: 0.7rem;
       font-size: 1.05rem;
-      font-weight: 600;
-      text-decoration: none;
+      font-weight: 700;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s;
-      width: 100%;
-      justify-content: center;
-      margin-bottom: 1rem;
+      transition: background 0.15s, transform 0.1s;
+      margin-bottom: 0.75rem;
     }
-
-    .btn-download:hover { background: #1d4ed8; transform: translateY(-1px); }
-    .btn-download:active { transform: translateY(0); }
-
-    .btn-download.unavailable {
-      background: #475569;
+    .btn-main:hover  { background: #1d4ed8; transform: translateY(-1px); }
+    .btn-main:active { transform: none; }
+    .btn-main.disabled {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #475569;
       cursor: not-allowed;
     }
 
-    .divider {
-      border: none;
-      border-top: 1px solid #334155;
-      margin: 1.5rem 0;
+    /* Caja de éxito (descarga iniciada) */
+    .success-box {
+      background: #052e16;
+      border: 1px solid #16a34a;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
     }
+    .success-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+    .success-box h2 { font-size: 1.1rem; color: #86efac; margin-bottom: 0.4rem; }
+    .success-box p  { font-size: 0.88rem; color: #4ade80; line-height: 1.55; }
 
-    .other-platforms h3 {
-      font-size: 0.8rem;
+    /* Divisor */
+    hr { border: none; border-top: 1px solid #334155; margin: 1.5rem 0; }
+
+    /* Sección de otras plataformas */
+    .section-label {
+      font-size: 0.78rem;
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: #64748b;
@@ -113,53 +121,70 @@
     .platform-btn {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
+      gap: 0.45rem;
       background: #0f172a;
       border: 1px solid #334155;
       border-radius: 0.5rem;
-      padding: 0.6rem 0.8rem;
+      padding: 0.6rem 0.85rem;
       color: #94a3b8;
-      text-decoration: none;
       font-size: 0.85rem;
-      transition: border-color 0.2s, color 0.2s;
       cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.15s, color 0.15s;
     }
+    .platform-btn:hover:not(.disabled) { border-color: #2563eb; color: #e2e8f0; }
+    .platform-btn.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
-    .platform-btn:hover {
-      border-color: #2563eb;
-      color: #e2e8f0;
+    /* Indicador de disponibilidad */
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      margin-left: auto;
+      flex-shrink: 0;
     }
+    .dot-ok      { background: #16a34a; }
+    .dot-missing { background: #475569; }
 
-    .footer {
-      margin-top: 2rem;
-      font-size: 0.75rem;
-      color: #475569;
-    }
-
-    #loading { color: #94a3b8; font-size: 0.9rem; }
+    .footer { margin-top: 2rem; font-size: 0.75rem; color: #475569; }
   </style>
 </head>
 <body>
   <div class="card">
     <div class="logo">🛠️</div>
-    <h1>Soporte Remoto</h1>
-    <p class="subtitle">Descarga la herramienta de asistencia remota para tu dispositivo.</p>
+    <h1>Bienvenido a Soporte Remoto</h1>
+    <p class="subtitle">
+      Descarga e instala la herramienta para que nuestro equipo pueda asistirte de forma segura.
+    </p>
 
-    <div class="platform-detected" id="platform-info">
-      <span id="loading">Detectando tu sistema operativo…</span>
+    <!-- Estado 1: botón de descarga principal -->
+    <div id="state-download">
+      <div class="platform-badge">
+        <span id="badge-text">Detectando sistema operativo…</span>
+      </div>
+      <div id="main-action">
+        <button class="btn-main disabled" disabled>Cargando…</button>
+      </div>
     </div>
 
-    <div id="main-action"></div>
+    <!-- Estado 2: descarga iniciada (oculto al inicio) -->
+    <div id="state-started" style="display:none">
+      <div class="success-box">
+        <div class="success-icon">✅</div>
+        <h2>Tu descarga ha comenzado</h2>
+        <p>
+          Instala el archivo descargado y comparte el código de sesión
+          con nuestro agente de soporte para iniciar la asistencia.
+        </p>
+      </div>
+    </div>
 
-    <hr class="divider" />
+    <hr/>
 
-    <div class="other-platforms">
-      <h3>Otras plataformas</h3>
-      <div class="platform-grid">
-        <a href="/download/windows" class="platform-btn">🪟 Windows</a>
-        <a href="/download/macos"   class="platform-btn">🍎 macOS</a>
-        <a href="/download/linux"   class="platform-btn">🐧 Linux</a>
-        <a href="/download/android" class="platform-btn">🤖 Android</a>
+    <!-- Otras plataformas (siempre visible) -->
+    <div id="other-section">
+      <p class="section-label" id="other-label">Otras plataformas</p>
+      <div class="platform-grid" id="platform-grid">
+        <!-- llenado por JS -->
       </div>
     </div>
   </div>
@@ -167,37 +192,122 @@
   <p class="footer">© 2025 Soporte Remoto · Jose Monroy</p>
 
   <script>
+    const PLATFORMS = [
+      { key: 'windows', icon: '🪟', label: 'Windows' },
+      { key: 'macos',   icon: '🍎', label: 'macOS'   },
+      { key: 'linux',   icon: '🐧', label: 'Linux'   },
+      { key: 'android', icon: '🤖', label: 'Android' },
+    ];
+
+    let detectedPlatform = null;
+    let allFiles = [];
+
+    /* Dispara descarga sin navegar fuera de la página */
+    function triggerDownload(url) {
+      const a = document.createElement('a');
+      a.href = url;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    /* Cambia al estado "descarga iniciada" */
+    function showStarted() {
+      document.getElementById('state-download').style.display = 'none';
+      document.getElementById('state-started').style.display  = 'block';
+      document.getElementById('other-label').textContent =
+        '¿No es tu plataforma? Descarga para otra:';
+      renderGrid(detectedPlatform); // excluye el SO ya descargado
+    }
+
+    /* Renderiza la grilla de otras plataformas */
+    function renderGrid(exclude) {
+      const grid = document.getElementById('platform-grid');
+      grid.innerHTML = PLATFORMS
+        .filter(p => p.key !== exclude)
+        .map(p => {
+          const file  = allFiles.find(f => f.platform === p.key);
+          const avail = file?.available ?? false;
+          const cls   = avail ? '' : 'disabled';
+          const dot   = `<span class="dot ${avail ? 'dot-ok' : 'dot-missing'}" title="${avail ? 'Disponible' : 'No disponible'}"></span>`;
+          const click = avail ? `onclick="handleAlt('${p.key}', event)"` : '';
+          return `<a href="/download/${p.key}" class="platform-btn ${cls}" ${click}>
+            <span>${p.icon}</span><span>${p.label}</span>${dot}
+          </a>`;
+        })
+        .join('');
+    }
+
+    /* Click en plataforma alternativa */
+    function handleAlt(platform, e) {
+      e.preventDefault();
+      triggerDownload(`/download/${platform}`);
+      if (document.getElementById('state-started').style.display === 'none') {
+        showStarted();
+      }
+    }
+
     async function init() {
       try {
-        const res = await fetch('/api/platform');
-        const data = await res.json();
+        const [platformRes, filesRes] = await Promise.all([
+          fetch('/api/platform'),
+          fetch('/api/files'),
+        ]);
+        const platformData = await platformRes.json();
+        allFiles = await filesRes.json();
+        detectedPlatform = platformData.platform;
 
-        const info = document.getElementById('platform-info');
+        /* Badge de plataforma detectada */
+        const badge = document.getElementById('badge-text');
+        if (platformData.download) {
+          badge.innerHTML =
+            `Sistema detectado: <span class="os-name">${platformData.download.icon} ${platformData.download.label}</span>`;
+        } else {
+          badge.textContent = 'Sistema operativo no detectado';
+        }
+
+        /* Botón principal */
         const action = document.getElementById('main-action');
+        const d = platformData.download;
 
-        if (data.platform === 'unknown' || !data.download) {
-          info.innerHTML = 'No se pudo detectar tu sistema operativo.';
-          action.innerHTML = `<p style="color:#94a3b8;font-size:.9rem;">Selecciona tu plataforma en la lista de abajo.</p>`;
-          return;
+        if (!d || platformData.platform === 'unknown') {
+          action.innerHTML =
+            `<p style="color:#64748b;font-size:.9rem;margin-bottom:.5rem">
+               Selecciona tu plataforma en la lista de abajo.
+             </p>`;
+
+        } else if (d.storeUrl) {
+          action.innerHTML =
+            `<a href="${d.storeUrl}" class="btn-main" target="_blank" rel="noopener">
+               ⬇️ Descargar para ${d.icon} ${d.label}
+             </a>`;
+
+        } else if (!d.available) {
+          action.innerHTML =
+            `<button class="btn-main disabled" disabled>
+               ${d.icon} ${d.label} – No disponible aún
+             </button>`;
+
+        } else {
+          action.innerHTML =
+            `<button class="btn-main" id="btn-primary">
+               ⬇️ Descargar para ${d.icon} ${d.label}
+             </button>`;
+          document.getElementById('btn-primary').addEventListener('click', () => {
+            triggerDownload('/download');
+            showStarted();
+          });
         }
 
-        info.innerHTML = `Sistema detectado: <span>${data.download.label}</span>`;
+        /* Grilla de otras plataformas */
+        renderGrid(detectedPlatform);
 
-        if (!data.download.available && !data.download.storeUrl) {
-          action.innerHTML = `
-            <button class="btn-download unavailable" disabled>
-              ${data.download.label} – No disponible
-            </button>`;
-          return;
-        }
-
-        const href = data.download.storeUrl || '/download';
-        action.innerHTML = `
-          <a href="${href}" class="btn-download">
-            ⬇️ Descargar para ${data.download.label}
-          </a>`;
-      } catch (e) {
-        document.getElementById('platform-info').textContent = 'Error al detectar la plataforma.';
+      } catch {
+        document.getElementById('badge-text').textContent =
+          'Error al detectar la plataforma.';
+        document.getElementById('main-action').innerHTML = '';
+        renderGrid(null);
       }
     }
 
