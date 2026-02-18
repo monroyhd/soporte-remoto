@@ -3,7 +3,11 @@ const path = require('path');
 const UAParser = require('ua-parser-js');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5001;
+const HOST = process.env.HOST || '127.0.0.1';
+
+// Confiar en el proxy inverso (Caddy) para leer X-Forwarded-For y X-Forwarded-Proto
+app.set('trust proxy', 1);
 
 // Archivos de descarga por plataforma
 const DOWNLOADS = {
@@ -138,6 +142,8 @@ app.get('/download/:platform', (req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ Servidor soporte-remoto corriendo en http://localhost:${PORT}`);
+// Escuchar solo en loopback: el tráfico público lo gestiona Caddy
+app.listen(PORT, HOST, () => {
+  console.log(`✅ Servidor soporte-remoto corriendo en http://${HOST}:${PORT}`);
+  console.log(`   (acceso público a través del proxy Caddy)`);
 });
