@@ -1,0 +1,32 @@
+# Caddyfile – soporte-remoto
+#
+# Reemplaza "soporte.example.com" con tu dominio real.
+# Caddy gestiona TLS automáticamente (Let's Encrypt/ZeroSSL).
+#
+# Coloca este archivo en:
+#   /etc/caddy/Caddyfile   (instalación del sistema)
+#   o junto al binario de Caddy para uso local.
+#
+# Recarga la configuración con:
+#   sudo systemctl reload caddy
+#   o:
+#   caddy reload --config Caddyfile
+
+soporte.example.com {
+    # Reenvía todo el tráfico al servidor Express
+    reverse_proxy 127.0.0.1:5001 {
+        # Cabeceras que Express necesita para conocer el cliente real
+        header_up X-Real-IP        {remote_host}
+        header_up X-Forwarded-For  {remote_host}
+        header_up X-Forwarded-Proto {scheme}
+    }
+
+    # Compresión gzip/zstd para respuestas estáticas
+    encode gzip zstd
+
+    # Logs de acceso (opcional)
+    log {
+        output file /var/log/caddy/soporte-remoto.log
+        format json
+    }
+}
