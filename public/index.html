@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soporte Remoto – Descarga</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 1rem;
+      padding: 3rem 2.5rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+    }
+
+    .logo {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #f1f5f9;
+    }
+
+    .subtitle {
+      color: #94a3b8;
+      font-size: 0.95rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .platform-detected {
+      background: #0f172a;
+      border: 1px solid #475569;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 2rem;
+    }
+
+    .platform-detected span {
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .btn-download {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 0.6rem;
+      padding: 0.9rem 2rem;
+      font-size: 1.05rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .btn-download:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .btn-download:active { transform: translateY(0); }
+
+    .btn-download.unavailable {
+      background: #475569;
+      cursor: not-allowed;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid #334155;
+      margin: 1.5rem 0;
+    }
+
+    .other-platforms h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+      margin-bottom: 0.75rem;
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+
+    .platform-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 0.5rem;
+      padding: 0.6rem 0.8rem;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: border-color 0.2s, color 0.2s;
+      cursor: pointer;
+    }
+
+    .platform-btn:hover {
+      border-color: #2563eb;
+      color: #e2e8f0;
+    }
+
+    .footer {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #475569;
+    }
+
+    #loading { color: #94a3b8; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="logo">🛠️</div>
+    <h1>Soporte Remoto</h1>
+    <p class="subtitle">Descarga la herramienta de asistencia remota para tu dispositivo.</p>
+
+    <div class="platform-detected" id="platform-info">
+      <span id="loading">Detectando tu sistema operativo…</span>
+    </div>
+
+    <div id="main-action"></div>
+
+    <hr class="divider" />
+
+    <div class="other-platforms">
+      <h3>Otras plataformas</h3>
+      <div class="platform-grid">
+        <a href="/download/windows" class="platform-btn">🪟 Windows</a>
+        <a href="/download/macos"   class="platform-btn">🍎 macOS</a>
+        <a href="/download/linux"   class="platform-btn">🐧 Linux</a>
+        <a href="/download/android" class="platform-btn">🤖 Android</a>
+      </div>
+    </div>
+  </div>
+
+  <p class="footer">© 2025 Soporte Remoto · Jose Monroy</p>
+
+  <script>
+    async function init() {
+      try {
+        const res = await fetch('/api/platform');
+        const data = await res.json();
+
+        const info = document.getElementById('platform-info');
+        const action = document.getElementById('main-action');
+
+        if (data.platform === 'unknown' || !data.download) {
+          info.innerHTML = 'No se pudo detectar tu sistema operativo.';
+          action.innerHTML = `<p style="color:#94a3b8;font-size:.9rem;">Selecciona tu plataforma en la lista de abajo.</p>`;
+          return;
+        }
+
+        info.innerHTML = `Sistema detectado: <span>${data.download.label}</span>`;
+
+        if (!data.download.available && !data.download.storeUrl) {
+          action.innerHTML = `
+            <button class="btn-download unavailable" disabled>
+              ${data.download.label} – No disponible
+            </button>`;
+          return;
+        }
+
+        const href = data.download.storeUrl || '/download';
+        action.innerHTML = `
+          <a href="${href}" class="btn-download">
+            ⬇️ Descargar para ${data.download.label}
+          </a>`;
+      } catch (e) {
+        document.getElementById('platform-info').textContent = 'Error al detectar la plataforma.';
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

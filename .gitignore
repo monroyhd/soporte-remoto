@@ -1,0 +1,8 @@
+node_modules/
+npm-debug.log*
+.env
+.DS_Store
+downloads/*.exe
+downloads/*.dmg
+downloads/*.sh
+downloads/*.apk
